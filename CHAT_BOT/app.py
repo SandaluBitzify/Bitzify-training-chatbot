@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 import joblib
 import pandas as pd
 import numpy as np
@@ -6,9 +7,10 @@ import json
 from llm_extractor_transformers import extract_structured_data
 
 app = Flask(__name__)
+CORS(app)
 
 # ✅ Load Linear Regression model & encoders
-forecast_model = joblib.load('demand_forecast_linear.pkl')
+forecast_model = joblib.load('demand_forecast_predictor.pkl')
 encoders = {name: joblib.load(f'{name}_encoder.pkl') for name in [
     'Store ID', 'Product ID', 'Category', 'Region', 'Weather Condition', 'Seasonality'
 ]}
@@ -58,4 +60,4 @@ def predict():
         return jsonify({'error': str(e)})
 
 if __name__ == '__main__':
-    app.run(port=5000, debug=True)
+    app.run(port=8000, debug=True)
